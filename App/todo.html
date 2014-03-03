@@ -2,6 +2,7 @@
 <html>
     <head>
         <title>ToDo v1.0</title>
+        <script src="./Scripts/main.js"></script>
     </head>
     
     <style>
@@ -21,8 +22,11 @@
     </style>
     
     <body>
+        
         <h1>Todo Application</h1>
 
+       
+        
         <!--// DIV for the input form //-->
         <div id="todoform" class="block">
             <h2>Insert a new todo</h2>
@@ -30,11 +34,11 @@
                 <p>
                     <dl>
                         <dt>Title</dt>
-                        <dd><input type="text" name="title" placeholder="title here" autofocus/></dd>
+                        <dd><input type="text" id="title" name="title" placeholder="title here" autofocus/></dd>
                         <dt>Description</dt>
-                        <dd><input type="text" name="desc" placeholder="description here" /></dd>
+                        <dd><input type="text" id="desc" name="desc" placeholder="description here" /></dd>
                     </dl>
-                    <input type="submit" value="store todo"/>
+                    <input type="button" value="store todo" onclick="newTodo();"/>
                 </p>
             </form>
         </div>
@@ -44,7 +48,7 @@
             <h2>Todo List</h2>
             <p>
                 Een lijst met de meest belangrijke taken voor vandaag:
-                <ul>
+                <ul id="todolist_ul" onclick="setDetails();">
                     <li>Hond uitlaten</li>
                     <li>Eten koken</li>
                     <li>Tanden poetsen</li>
@@ -54,8 +58,8 @@
     
         <!--// DIV for the detail screen //-->
         <div id="tododetail" class="block">
-            <h2>Hond uitlaten</h2>
-            <p>
+            <h2 id="detail_title">Hond uitlaten</h2>
+            <p id="detail_descr">
                 Zo nu en dan moet de hond eens worden uitgelaten. Het beesie moet immers ook een keer wat kwijt, istnie?
             </p>
         </div>
@@ -63,4 +67,6 @@
         
         
     </body>
+   
+
 </html>
