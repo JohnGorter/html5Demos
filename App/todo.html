@@ -3,11 +3,28 @@
     <head>
         <title>ToDo v1.0</title>
     </head>
+    
+    <style>
+      body { font-family: verdana}
+      h1   { text-shadow:10px 10px 10px gray}
+      .block {
+        font-size:12px;
+        float:left;
+        width:250px;
+        height:250px;
+        border:1px solid #886655;
+        padding:10px;
+        margin:10px;
+        border-radius: 15px;
+        background-color:#ffeedd
+        }
+    </style>
+    
     <body>
         <h1>Todo Application</h1>
-    
+
         <!--// DIV for the input form //-->
-        <div id="todoform">
+        <div id="todoform" class="block">
             <h2>Insert a new todo</h2>
             <form>
                 <p>
@@ -15,7 +32,7 @@
                         <dt>Title</dt>
                         <dd><input type="text" name="title" placeholder="title here" autofocus/></dd>
                         <dt>Description</dt>
-                        <dd><input type="desc" name="desc" placeholder="description here" /></dd>
+                        <dd><input type="text" name="desc" placeholder="description here" /></dd>
                     </dl>
                     <input type="submit" value="store todo"/>
                 </p>
@@ -23,7 +40,8 @@
         </div>
     
         <!--// DIV for the todo list //-->
-        <div id="todolist">
+        <div id="todolist" class="block">
+            <h2>Todo List</h2>
             <p>
                 Een lijst met de meest belangrijke taken voor vandaag:
                 <ul>
@@ -35,12 +53,14 @@
         </div>
     
         <!--// DIV for the detail screen //-->
-        <div id="tododetail">
+        <div id="tododetail" class="block">
             <h2>Hond uitlaten</h2>
             <p>
                 Zo nu en dan moet de hond eens worden uitgelaten. Het beesie moet immers ook een keer wat kwijt, istnie?
             </p>
         </div>
+        
+        
         
     </body>
 </html>
