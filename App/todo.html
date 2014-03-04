@@ -1,22 +1,31 @@
 <!DOCTYPE html>
+
 <html>
-    <head>
-        <title>ToDo v1.0</title>
-        <link rel="stylesheet" href="./Bootstrap/css/bootstrap.css" />
-        <link rel="stylesheet" href="./Bootstrap/css/bootstrap-theme.css" />
-        <script src="./Scripts/main.js"></script>
-    </head>
-    
-    <style>
-      .top-buffer { margin-top:20px; }
-      h1   { text-shadow:10px 10px 10px gray}
-      .block {
+<head>
+    <title>ToDo v1.0</title>
+    <link rel="stylesheet" href="./Bootstrap/css/bootstrap.css" type="text/css">
+    <link rel="stylesheet" href="./Bootstrap/css/bootstrap-theme.css" type="text/css">
+    <script src="http://code.jquery.com/jquery-1.11.0.min.js" type="text/javascript">
+</script>
+    <script src="./Bootstrap/js/bootstrap.js" type="text/javascript">
+</script>
+    <script src="./Scripts/main.js" type="text/javascript">
+</script>
+    <style type="text/css">
+    .top-buffer { margin-top:20px; }
+    h1   { text-shadow:10px 10px 10px gray}
+    .block {
         border:1px solid #886655;
         border-radius: 5px;
         padding-right:7px;
         padding-left:7px;
         background-color:#ffeedd; 
-        }
+    }
+    
+     .jumbotron {
+        background-image: url(./images/bg.jpg);
+        background-size: cover;
+     }  
         
     @media screen and (orientation:portrait)
     {
@@ -30,86 +39,96 @@
 
     }
     </style>
-    
-    <body>
-        
-        <div class="container-fluid">
-            <div class="row-fluid">
-                    <div class="col-md-12 hidden-xs"><h1>Todo Application Desktop <small>by John Gorter</small></h1></div>
-                    <div class="col-md-12 visible-xs"><h1>Todo Application Mobile <br/><small>by John Gorter</small></h1></div>
-            </div>
-            <div class="row-fluid">
-                <!--// DIV for the input form //-->
-                <div class="col-xs-12 col-sm-4 top-buffer">
-                    <div id="todoform" class="block">
-                        <h2>Insert a new todo</h2>
-                        <form role="form">
-                            
-                            <div class="form-group">
-                                <label for="title">Title</label>
-                                <input type="text" class="form-control" required id="title" name="title" placeholder="title here" autofocus />
-                            </div>
-                            <div class="form-group">
-                                <label for="description">Description</label>
-                                <input type="text" class="form-control" id="desc" name="desc" placeholder="description here" />
-                            </div>
-                            
-                            <div class="form-group">
-                                <label for="price">Price</label>
-                                <div class="input-group">
-                                    <span class="input-group-addon">&euro;</span>
-                                    <input type="number" class="form-control" id="price" name="price" placeholder="0" />
-                                    <span class="input-group-addon">,00</span>
-                                </div>
-                            </div>
-                            
-                            <div class="form-group">
-                                <input type="submit" class="btn btn-default btn-block visible-xs" value="store todo" onclick="newTodo();"/>
-                                <input type="submit" class="btn btn-default hidden-xs" value="store todo" onclick="newTodo();"/>
-                            </div>
-                        </form>
-                        <br/>
-                    </div>
-                </div>
-    
-    
-                <!--// DIV for the todo list //-->
-                <div class="col-xs-12 col-sm-4 top-buffer">
-                    <div id="todolist" class="block">
-                        <h2>Todo List</h2>
-                        <p>
-                            Een lijst met de meest belangrijke taken voor vandaag:
-                            <ul id="todolist_ul" onclick="setDetails();">
-                                <li>Hond uitlaten</li>
-                                <li>Eten koken</li>
-                                <li>Tanden poetsen</li>
-                            </ul>
-                        </p>    
-                    </div>
-                </div>
-            
-                <!--// DIV for the detail screen //-->
-                <div class="col-xs-12 col-sm-4 top-buffer">
-                    <div id="tododetail" class="block">
-                        <h2 id="detail_title">Hond uitlaten</h2>
-                        <p id="detail_descr">
-                            Zo nu en dan moet de hond eens worden uitgelaten. Het beesie moet immers ook een keer wat kwijt, istnie?
-                        </p>
-                    </div>
-                </div>
-                    
-            </div>
-            
-            <div class="row-fluid">
-                <div class="col-xs-12 top-buffer">
-                    All rights reserved (c) 2014 <span class="landscape">Landscape View</span> <span class="portrait">Portrait View</span>
-                </div>
-                
-            </div>
-            
+</head>
 
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="jumbotron hidden-xs">
+                <h1>Todo Application [Desktop] <small>by John Gorter</small></h1>
+            </div>
+
+            <div class="jumbotron visible-xs">
+                <h1>Todo Application [Mobile] <br><small>by John Gorter</small></h1>
+            </div>
         </div>
-    </body>
-   
 
+        <div class="row">
+            <!--// DIV for the input form //-->
+
+            <div class="col-xs-12 col-sm-4 top-buffer">
+                <div id="todoform" class="block">
+                    <h3>Insert a new todo</h3>
+                    <button class="btn btn-default"
+                            data-toggle="modal"
+                            data-target="#myModal">Insert todo...</button>
+                    <!-- Modal -->
+                    <br/><br/>
+                </div>
+            </div><!--// DIV for the todo list //-->
+
+            <div class="col-xs-12 col-sm-4 top-buffer">
+                <div id="todolist" class="block">
+                    <h3>Todo List <span class="badge pull-right" id="badge">3</span></h3>
+
+                    <p>Een lijst met de meest belangrijke taken voor vandaag:</p>
+                    
+
+                    <ul id="todolist_ul" onclick="setDetails();">
+                        <li>Hond uitlaten</li>
+
+                        <li>Eten koken</li>
+
+                        <li>Tanden poetsen</li>
+                    </ul>
+                </div>
+            </div><!--// DIV for the detail screen //-->
+
+            <div class="col-xs-12 col-sm-4 top-buffer">
+                <div id="tododetail" class="block">
+                    <h3 id="detail_title">Hond uitlaten</h3>
+
+                    <p id="detail_descr">Zo nu en dan moet de hond eens worden uitgelaten. Het beesie moet immers ook een keer wat kwijt, istnie?</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-xs-12 top-buffer" id="alertpanel">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-12 top-buffer">
+                All rights reserved (c) 2014 <span class="landscape">Landscape View</span> <span class="portrait">Portrait View</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&#215;</button>
+                    <h4 class="modal-title" id="myModalLabel">Add a new Todo</h4>
+                </div>
+
+                <div class="modal-body">
+                    <form role="form">
+                        <div class="form-group">
+                            <label for="title">Title</label> <input type="text" class="form-control" required="" id="title" name="title" placeholder="title here" autofocus="">
+                        </div>
+                        <div class="form-group">
+                            <label for="description">Description</label> <input type="text" class="form-control" id="desc" name="desc" placeholder="description here">
+                        </div>
+                    </form>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="newTodo();">Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
 </html>
