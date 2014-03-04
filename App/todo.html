@@ -2,70 +2,99 @@
 <html>
     <head>
         <title>ToDo v1.0</title>
+        <link rel="stylesheet" href="./Bootstrap/css/bootstrap.css" />
+        <link rel="stylesheet" href="./Bootstrap/css/bootstrap-theme.css" />
         <script src="./Scripts/main.js"></script>
     </head>
     
     <style>
-      body { font-family: verdana}
+      .top-buffer { margin-top:20px; }
       h1   { text-shadow:10px 10px 10px gray}
       .block {
         font-size:12px;
-        float:left;
-        width:250px;
-        height:250px;
         border:1px solid #886655;
-        padding:10px;
-        margin:10px;
-        border-radius: 10px;
-        background-color:#ffeedd
+        border-radius: 5px;
+        padding-right:7px;
+        padding-left:7px;
+        background-color:#ffeedd; 
         }
+        
+    @media screen and (orientation:portrait)
+    {
+      .landscape { display:none;}
+      .portrait  { display:inline;}
+    }
+    @media screen and (orientation:landscape)
+    {
+      .landscape { display:inline;}
+      .portrait  { display:none;}
+
+    }
     </style>
     
     <body>
         
-        <h1>Todo Application</h1>
+        <div class="container-fluid">
+            <div class="row">
+                    <div class="col-md-12 hidden-xs"><h1>Todo Application Desktop <small>by John Gorter</small></h1></div>
+                    <div class="col-md-12 visible-xs"><h1>Todo Application Mobile <br/><small>by John Gorter</small></h1></div>
+            </div>
+            <div class="row-fluid">
+                <!--// DIV for the input form //-->
+                <div class="col-xs-12 col-sm-4 top-buffer">
+                    <div id="todoform" class="block">
+                        <h2>Insert a new todo</h2>
+                        <form>
+                            <p>
+                                <dl>
+                                    <dt>Title</dt>
+                                    <dd><input type="text" id="title" name="title" placeholder="title here" autofocus/></dd>
+                                    <dt>Description</dt>
+                                    <dd><input type="text" id="desc" name="desc" placeholder="description here" /></dd>
+                                </dl>
+                                <input type="button" value="store todo" onclick="newTodo();"/>
+                            </p>
+                        </form>
+                    </div>
+                </div>
+    
+    
+                <!--// DIV for the todo list //-->
+                <div class="col-xs-12 col-sm-4 top-buffer">
+                    <div id="todolist" class="block">
+                        <h2>Todo List</h2>
+                        <p>
+                            Een lijst met de meest belangrijke taken voor vandaag:
+                            <ul id="todolist_ul" onclick="setDetails();">
+                                <li>Hond uitlaten</li>
+                                <li>Eten koken</li>
+                                <li>Tanden poetsen</li>
+                            </ul>
+                        </p>    
+                    </div>
+                </div>
+            
+                <!--// DIV for the detail screen //-->
+                <div class="col-xs-12 col-sm-4 top-buffer">
+                    <div id="tododetail" class="block">
+                        <h2 id="detail_title">Hond uitlaten</h2>
+                        <p id="detail_descr">
+                            Zo nu en dan moet de hond eens worden uitgelaten. Het beesie moet immers ook een keer wat kwijt, istnie?
+                        </p>
+                    </div>
+                </div>
+                    
+            </div>
+            
+            <div class="row-fluid">
+                <div class="col-xs-12 col-sm-12 top-buffer">
+                    All rights reserved (c) 2014 <span class="landscape">Landscape View</span> <span class="portrait">Portrait View</span>
+                </div>
+                
+            </div>
+            
 
-       
-        
-        <!--// DIV for the input form //-->
-        <div id="todoform" class="block">
-            <h2>Insert a new todo</h2>
-            <form>
-                <p>
-                    <dl>
-                        <dt>Title</dt>
-                        <dd><input type="text" id="title" name="title" placeholder="title here" autofocus/></dd>
-                        <dt>Description</dt>
-                        <dd><input type="text" id="desc" name="desc" placeholder="description here" /></dd>
-                    </dl>
-                    <input type="button" value="store todo" onclick="newTodo();"/>
-                </p>
-            </form>
         </div>
-    
-        <!--// DIV for the todo list //-->
-        <div id="todolist" class="block">
-            <h2>Todo List</h2>
-            <p>
-                Een lijst met de meest belangrijke taken voor vandaag:
-                <ul id="todolist_ul" onclick="setDetails();">
-                    <li>Hond uitlaten</li>
-                    <li>Eten koken</li>
-                    <li>Tanden poetsen</li>
-                </ul>
-            </p>    
-        </div>
-    
-        <!--// DIV for the detail screen //-->
-        <div id="tododetail" class="block">
-            <h2 id="detail_title">Hond uitlaten</h2>
-            <p id="detail_descr">
-                Zo nu en dan moet de hond eens worden uitgelaten. Het beesie moet immers ook een keer wat kwijt, istnie?
-            </p>
-        </div>
-        
-        
-        
     </body>
    
 
