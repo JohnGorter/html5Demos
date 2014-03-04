@@ -6,7 +6,9 @@ function newTodo() {
     var li = document.createElement("li");
     li.innerText = title.value;
     // add the <li> to the <ul>
-    ul.appendChild(li); 
+    ul.appendChild(li);
+    event.preventDefault();
+    event.stopPropagation();
 }
 
 function setDetails() {
