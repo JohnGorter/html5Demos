@@ -1,88 +1,21 @@
 <!DOCTYPE html>
-
 <html>
 <head>
     <title>ToDo v1.0</title>
     <link rel="stylesheet" href="./Bootstrap/css/bootstrap.css" type="text/css">
     <link rel="stylesheet" href="./Bootstrap/css/bootstrap-theme.css" type="text/css">
-    <link rel="stylesheet" href="/styles/default.less" type="text/css" >
+    <link rel="stylesheet" href="./styles/default.css" type="text/css" >
         
     <script src="./scripts/jquery-1.11.0.js" type="text/javascript"></script>
     <script src="./Bootstrap/js/bootstrap.js" type="text/javascript"></script>
-    
-    <style type="text/css">
-    h1   { text-shadow:10px 10px 10px gray}
-    li   { width:300px;}
-
-    .top-buffer { margin-top:20px; }
-    .block {
-        border:1px solid #886655;
-        border-radius: 5px;
-        padding-right:7px;
-        padding-left:7px;
-        background-color:#ffeedd; 
-    }
-    .h {display:none;}
-    .d {float:right;margin-right:20px;font-size:16px;}
-    .jumbotron {
-        background-image: url(./images/bg.jpg);
-        background-size: cover;
-    }
-    
-    #aPanel { display:none;}
-    
-    @media screen and (orientation:portrait)
-    {
-      .landscape { display:none;}
-      .portrait  { display:inline;}
-    }
-    @media screen and (orientation:landscape)
-    {
-      .landscape { display:inline;}
-      .portrait  { display:none;}
-    }
-    </style>
+    <script src="./Scripts/main.js" type="text/javascript"></script>
 </head>
-
-<script>
-     $(function(){
-        $("#badge").text($("#tul li").size());
-        $("#btnAlert").click(function(){ $("#aPanel").hide()});
-        $("#bS").click(function() {
-            $("<li>").append(
-                $("<span>").addClass("t").text($("#t").val())
-            ).append(
-                $("<span>").addClass("h").text($("#d").val())
-            ).append(
-                $("<span>").addClass("d glyphicon glyphicon-ok").click(function(){
-                    $(this).parent().fadeOut("slow", function() {
-                        $(this).remove();
-                        $("#dt").text("-nothing selected-");
-                        $("#dd").text("-nothing selected-");
-                        $("#badge").text($("#tul li").size());
-                    });
-                    $("#aPanel span").text("Item Deleted!").parent().show().delay(2000).fadeOut();
-                }
-            )).click(function(e){
-                $("#dt").text($(".t", this).text());
-                $("#dd").text($(".h", this).text());
-                }
-            ).appendTo("#tul");
-            $("#aPanel span").text("Item Added!").parent().show().delay(2000).fadeOut();
-            $("#badge").text($("#tul li").size());
-        });
-    });
-     
-   
-</script>
-
 <body>
     <div class="container">
         <div class="row">
             <div class="jumbotron hidden-xs">
                 <h1>Todo Application [Desktop] <small>by John Gorter</small></h1>
             </div>
-
             <div class="jumbotron visible-xs">
                 <h1>Todo Application [Mobile] <br><small>by John Gorter</small></h1>
             </div>
