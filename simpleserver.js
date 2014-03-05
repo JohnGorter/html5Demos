@@ -13,7 +13,7 @@ http.createServer(function (req, res) {
     }
     
     // Make sure we get it from the source directory
-    url = './source' + url;
+    url = './app' + url;
     
     // Get the document
     fs.exists(url, function (exists) {
