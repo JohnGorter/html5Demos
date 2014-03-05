@@ -45,23 +45,35 @@
 </head>
 
 <script>
-    $(function(){
-        $("#bS").click(function(){
-            $("<li>")
-            .append($("<span class='t'>").text($("#t").val()))
-            .append($("<span class='h'>").text($("#d").val()))
-            .append($("<span class='d glyphicon glyphicon-ok'>")
-                    .click(function(){
-                        $(this).parent().remove();
+     $(function(){
+        $("#badge").text($("#tul li").size());
+        $("#btnAlert").click(function(){ $("#aPanel").hide()});
+        $("#bS").click(function() {
+            $("<li>").append(
+                $("<span>").addClass("t").text($("#t").val())
+            ).append(
+                $("<span>").addClass("h").text($("#d").val())
+            ).append(
+                $("<span>").addClass("d glyphicon glyphicon-ok").click(function(){
+                    $(this).parent().fadeOut("slow", function() {
+                        $(this).remove();
                         $("#dt").text("-nothing selected-");
                         $("#dd").text("-nothing selected-");
-                    })
-            ).click(function(e){
+                        $("#badge").text($("#tul li").size());
+                    });
+                    $("#aPanel span").text("Item Deleted!").parent().show().delay(2000).fadeOut();
+                }
+            )).click(function(e){
                 $("#dt").text($(".t", this).text());
                 $("#dd").text($(".h", this).text());
-            }).appendTo("#tul");
+                }
+            ).appendTo("#tul");
+            $("#aPanel span").text("Item Added!").parent().show().delay(2000).fadeOut();
+            $("#badge").text($("#tul li").size());
         });
-    }); 
+    });
+     
+   
 </script>
 
 <body>
