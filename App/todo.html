@@ -7,14 +7,14 @@
     <link rel="stylesheet" href="./Bootstrap/css/bootstrap-theme.css" type="text/css">
     <link rel="stylesheet" href="/styles/default.less" type="text/css" >
         
-    <script src="http://code.jquery.com/jquery-1.11.0.min.js" type="text/javascript"></script>
+    <script src="./scripts/jquery-1.11.0.js" type="text/javascript"></script>
     <script src="./Bootstrap/js/bootstrap.js" type="text/javascript"></script>
-    <script src="./Scripts/main.js" type="text/javascript"></script>
-   
     
     <style type="text/css">
-    .top-buffer { margin-top:20px; }
     h1   { text-shadow:10px 10px 10px gray}
+    li   { width:300px;}
+
+    .top-buffer { margin-top:20px; }
     .block {
         border:1px solid #886655;
         border-radius: 5px;
@@ -22,12 +22,15 @@
         padding-left:7px;
         background-color:#ffeedd; 
     }
-    
-     .jumbotron {
+    .h {display:none;}
+    .d {float:right;margin-right:20px;font-size:16px;}
+    .jumbotron {
         background-image: url(./images/bg.jpg);
         background-size: cover;
-     }  
-        
+    }
+    
+    #aPanel { display:none;}
+    
     @media screen and (orientation:portrait)
     {
       .landscape { display:none;}
@@ -37,10 +40,29 @@
     {
       .landscape { display:inline;}
       .portrait  { display:none;}
-
     }
     </style>
 </head>
+
+<script>
+    $(function(){
+        $("#bS").click(function(){
+            $("<li>")
+            .append($("<span class='t'>").text($("#t").val()))
+            .append($("<span class='h'>").text($("#d").val()))
+            .append($("<span class='d glyphicon glyphicon-ok'>")
+                    .click(function(){
+                        $(this).parent().remove();
+                        $("#dt").text("-nothing selected-");
+                        $("#dd").text("-nothing selected-");
+                    })
+            ).click(function(e){
+                $("#dt").text($(".t", this).text());
+                $("#dd").text($(".h", this).text());
+            }).appendTo("#tul");
+        });
+    }); 
+</script>
 
 <body>
     <div class="container">
@@ -56,7 +78,6 @@
 
         <div class="row">
             <!--// DIV for the input form //-->
-
             <div class="col-xs-12 col-sm-4 top-buffer">
                 <div id="todoform" class="block">
                     <h3>Insert a new todo</h3>
@@ -66,36 +87,31 @@
                     <!-- Modal -->
                     <br/><br/>
                 </div>
-            </div><!--// DIV for the todo list //-->
-
+            </div>
+            
+            <!--// DIV for the todo list //-->
             <div class="col-xs-12 col-sm-4 top-buffer">
                 <div id="todolist" class="block">
                     <h3>Todo List <span class="badge pull-right" id="badge">3</span></h3>
-
                     <p>Een lijst met de meest belangrijke taken voor vandaag:</p>
-                    
-
-                    <ul id="todolist_ul" onclick="setDetails();">
-                        <li>Hond uitlaten</li>
-
-                        <li>Eten koken</li>
-
-                        <li>Tanden poetsen</li>
-                    </ul>
+                    <ul id="tul"></ul>
                 </div>
-            </div><!--// DIV for the detail screen //-->
-
+            </div>
+            
+            <!--// DIV for the detail screen //-->
             <div class="col-xs-12 col-sm-4 top-buffer">
                 <div id="tododetail" class="block">
-                    <h3 id="detail_title">Hond uitlaten</h3>
-
-                    <p id="detail_descr">Zo nu en dan moet de hond eens worden uitgelaten. Het beesie moet immers ook een keer wat kwijt, istnie?</p>
+                    <h3 id="dt">-nothing selected-</h3>
+                    <p id="dd">-nothing selected-</p>
                 </div>
             </div>
         </div>
 
         <div class="row">
-            <div class="col-xs-12 top-buffer" id="alertpanel">
+            <div class="col-xs-12 top-buffer">
+                <div class="alert alert-info" id="aPanel">
+                    <button type="button" class="close" id="btnAlert">&times;</button>
+                    <strong>Information!</strong><br /><span></span></div>   
             </div>
         </div>
         <div class="row">
@@ -116,20 +132,21 @@
                 <div class="modal-body">
                     <form role="form">
                         <div class="form-group">
-                            <label for="title">Title</label> <input type="text" class="form-control" required="" id="title" name="title" placeholder="title here" autofocus="">
+                            <label for="title">Title</label> <input type="text" class="form-control" required id="t" name="title" placeholder="title here" autofocus="">
                         </div>
                         <div class="form-group">
-                            <label for="description">Description</label> <input type="text" class="form-control" id="desc" name="desc" placeholder="description here">
+                            <label for="description">Description</label> <input type="text" class="form-control" id="d" name="desc" placeholder="description here">
                         </div>
                     </form>
                 </div>
 
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                    <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="newTodo();">Save</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button> 
+                    <button type="button" id="bS" class="btn btn-primary" data-dismiss="modal">Save</button>
                 </div>
             </div>
         </div>
     </div>
+
 </body>
 </html>

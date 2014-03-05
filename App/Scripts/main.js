@@ -1,4 +1,5 @@
 function newTodo() {
+    /*
     // get the title
     var title = document.getElementById("title");
     var badge = document.getElementById("badge");
@@ -19,6 +20,8 @@ function setDetails() {
     var title = document.getElementById("detail_title");
     //var descr = document.getElementById("detail_descr"); 
     title.innerText = li.innerText;
+}
+*/
 }
 
 
