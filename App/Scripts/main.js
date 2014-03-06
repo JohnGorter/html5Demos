@@ -1,4 +1,11 @@
 $(function(){
+    
+    $.ajax({url:'/Todo/GetTodos', dataType:'JSON', cache:false, success:function(data){
+        for(var i = 0; i < data.length; i++)
+            addTodo(data[i].title, data[i].description, false);
+    }});
+    
+    
     $("#tul").keyup(function(e){
                 $("#tul").trigger('indexchange', [ "keycode", e.keyCode]);
     });
@@ -23,37 +30,61 @@ $(function(){
     }); 
    // add a new todo item to the unordered list
    $("#bS").click(function() {
-       $("<li>").append(
-           // append a <span> to the LI containing the title of the title input
-           $("<span>").addClass("t").text($("#t").val())
+        addTodo($("#t").val(), $("#d").val(), true);
+   });
+});
+
+function deleteTodo(element, title) {
+    $(element).parent().fadeOut("slow", function () {
+        // remove the parent LI after the LI has fully faded out
+        $(element).remove();
+        // $("#dt").text("-nothing selected-");
+        $("#dd").text("-nothing selected-");
+        // reset the badge counter to the current LI count
+        $("#badge").text($("#tul li").size());
+    });
+    // set the information panel text to Item Deleted and show the panel for 2 seconds
+    $("#aPanel span").text("Item Deleted!").parent().show().delay(2000).fadeOut();
+
+    $.ajax({ url: '/todo/deleteTodo', cache: false, dataType: 'JSON', data: {
+        'title': title 
+    }});
+}
+
+
+function addTodo(title, description, save) {
+    $("<li>").append(
+    // append a <span> to the LI containing the title of the title input
+           $("<span>").addClass("t").text(title)
        ).append(
-           // append a <span> to the LI containing the description of the description input
-           $("<span>").addClass("h").text($("#d").val())
+    // append a <span> to the LI containing the description of the description input
+           $("<span>").addClass("h").text(description)
        ).append(
-           // append a <span> for the done icon and handle the done click 
-           $("<span>").addClass("d glyphicon glyphicon-ok").click(function(){
-               $(this).parent().fadeOut("slow", function() {
-                   // remove the parent LI after the LI has fully faded out
-                   $(this).remove();
-                  // $("#dt").text("-nothing selected-");
-                   $("#dd").text("-nothing selected-");
-                   // reset the badge counter to the current LI count
-                   $("#badge").text($("#tul li").size());
-               });
-               // set the information panel text to Item Deleted and show the panel for 2 seconds
-               $("#aPanel span").text("Item Deleted!").parent().show().delay(2000).fadeOut();
+    // append a <span> for the done icon and handle the done click 
+       $("<span>").addClass("d glyphicon glyphicon-ok").click(function () {
+               deleteTodo(this, title);
            }
-       )).click(function(e){
+       )).click(function (e) {
            //$("#dt").text($(".t", this).text());
            $("#tul li").removeClass("selected");
            $(this).addClass("selected");
            $("#dd").text($(".h", this).text());
-           }
+       }
        ).appendTo("#tul");
        // set the information panel text to Item Added and show the panel for 2 seconds
        $("#aPanel span").text("Item Added!").parent().show().delay(2000).fadeOut();
        // reset the badge counter to the current LI count
        $("#badge").text($("#tul li").size());
-   });
-});
+
+       if (save) {
+           $.ajax({ url: '/todo/AddTodo', cache: false, dataType: 'JSON', data: {
+               'title': title, 'description': description
+           }, success: function (data) {
+               alert(data);
+           } 
+           });
+       }
+          
+    
+}
    

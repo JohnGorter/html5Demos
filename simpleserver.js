@@ -1,9 +1,15 @@
 var http = require('http');
 var fs = require('fs');
 var less = require('less');
+var mongoose = require('mongoose');
+
+console.log("connecting to database"); 
+mongoose.connect('mongodb://localhost/john');
+var TodoModel = mongoose.model('Todo', { title: String, description: String });
+
+
 
 http.createServer(function (req, res) {
-    
     // Get the URL
     var url = req.url;
     
@@ -11,6 +17,18 @@ http.createServer(function (req, res) {
     if (stringEndsWith(url, '/')) {
         url += 'index.html';
     }
+    
+    if (url.indexOf('todojson') > 0) {
+        console.log("getting todos");
+        TodoModel.find(function(err, data) {
+            console.log("sending todos");
+            res.writeHead(200, {'Content-Type': 'application/json'});
+            res.write(JSON.stringify(data));
+            res.end();
+        });
+        return ;
+    }
+    
     
     // Make sure we get it from the source directory
     url = './app' + url;
