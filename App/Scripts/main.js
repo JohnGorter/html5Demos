@@ -37,7 +37,7 @@ $(function(){
 function deleteTodo(element, title) {
     $(element).parent().fadeOut("slow", function () {
         // remove the parent LI after the LI has fully faded out
-        $(element).remove();
+        $(element).parent().remove();
         // $("#dt").text("-nothing selected-");
         $("#dd").text("-nothing selected-");
         // reset the badge counter to the current LI count
