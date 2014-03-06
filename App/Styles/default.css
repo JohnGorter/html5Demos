@@ -18,6 +18,13 @@ ul   { margin-left:-20px; list-style-type: none;outline:none;}
     border:1px solid #886655;
     border-radius: 15px !IMPORTANT;
 }
+.inputerror { background-color: pink;}
+.error
+    {
+        color:red;
+        display:none;
+    }
+    
 .block {
     border:1px solid #886655;
     border-radius: 5px;

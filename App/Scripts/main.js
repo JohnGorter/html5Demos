@@ -1,10 +1,12 @@
 $(function(){
+    $("input").change(function(event){
+        validateForm(this);    
+    });
     
     $.ajax({url:'/Todo/GetTodos', dataType:'JSON', cache:false, success:function(data){
         for(var i = 0; i < data.length; i++)
             addTodo(data[i].title, data[i].description, false);
     }});
-    
     
     $("#tul").keyup(function(e){
                 $("#tul").trigger('indexchange', [ "keycode", e.keyCode]);
@@ -27,6 +29,7 @@ $(function(){
    $("#btnDialog").click(function(){
         $("#t").val("");
         $("#d").val("");
+        resetForm();
     }); 
    // add a new todo item to the unordered list
    $("#bS").click(function() {
@@ -51,8 +54,46 @@ function deleteTodo(element, title) {
     }});
 }
 
+function resetForm() {
+    $(".error").hide();
+    $("input").removeClass("inputerror");
+}
+
+function validateForm(element) {
+    
+    var error = false;
+    
+    if (element != undefined) {
+      if (!element.checkValidity()) {
+            $(".error", $(element).parent()).fadeIn();
+            $(element).addClass("inputerror");
+            error = true;
+      } else {
+         $(".error", $(element).parent()).fadeOut();
+            $(element).removeClass("inputerror");
+      }
+    } else {
+        resetForm();
+        $("input").each(function(index, element){
+            if (!element.checkValidity()) {
+                $(".error", $(element).parent()).fadeIn();
+                $(element).addClass("inputerror");
+                error = true;
+            }
+        });
+    }
+    return error;
+}
+
 
 function addTodo(title, description, save) {
+    if (validateForm())
+    {
+        event.preventDefault();
+        event.stopPropagation();
+        return;
+    }
+    
     $("<li>").append(
     // append a <span> to the LI containing the title of the title input
            $("<span>").addClass("t").text(title)
