@@ -1,4 +1,6 @@
 var http = require('http');
+var urlm = require( "url" );
+var queryString = require( "querystring" );
 var fs = require('fs');
 var less = require('less');
 var mongoose = require('mongoose');
@@ -6,8 +8,6 @@ var mongoose = require('mongoose');
 console.log("connecting to database"); 
 mongoose.connect('mongodb://localhost/john');
 var TodoModel = mongoose.model('Todo', { title: String, description: String });
-
-
 
 http.createServer(function (req, res) {
     // Get the URL
@@ -18,7 +18,7 @@ http.createServer(function (req, res) {
         url += 'index.html';
     }
     
-    if (url.indexOf('todojson') > 0) {
+    if (url.indexOf('/GetTodos') > 0) {
         console.log("getting todos");
         TodoModel.find(function(err, data) {
             console.log("sending todos");
@@ -29,6 +29,33 @@ http.createServer(function (req, res) {
         return ;
     }
     
+    if (url.indexOf('/deleteTodo') > 0) {
+        console.log("delete todo");
+        
+        var theurl = urlm.parse(req.url);
+        var data = queryString.parse(theurl.query);
+        
+        TodoModel.findOne ({title:data.title}, function(error, todo){
+            todo.remove();
+            console.log("todo deleted!");
+        });
+        return ;
+    }
+    
+    if (url.indexOf('/AddTodo') > 0) {
+        console.log("add todo");
+        
+        var theurl = urlm.parse(req.url);
+        var data = queryString.parse(theurl.query);
+        
+        var todo = new TodoModel();
+        todo.title = data.title;
+        todo.description = data.description;
+        todo.save();
+        
+        console.log("todo added!");
+        return ;
+    }
     
     // Make sure we get it from the source directory
     url = './app' + url;
