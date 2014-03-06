@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+    <title>Flexible boxes</title>
+</head>
+<style>
+    #container {
+        display:flex;
+        flex-direction:row;
+        align-items:stretch;
+        border:1px solid black;
+        width:100%;
+        height:600px;
+        
+    }
+    .block {
+        flex:1;
+        background-color:orange;
+        margin:5px;
+    }
+    .green {
+        background-color:green;
+        flex:3;
+    }
+    
+    @media screen and (max-width:400px) {
+        #container {
+            flex-direction:column;
+        }
+        .green {
+            order:-1;
+        }
+    }
+    
+    .header {display:block;width:100%;}
+</style>
+<body>
+<div class="block header">header</div>
+<div id="container">
+    <div class="block">navigation</div>
+    <div class="block green">content</div>
+    <div class="block">footer</div>
+    
+</div>
+
+
+</body>
+</html>
