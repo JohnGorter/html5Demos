@@ -4,12 +4,13 @@ var queryString = require( "querystring" );
 var fs = require('fs');
 var less = require('less');
 var mongoose = require('mongoose');
+var websocket = require('websocket');
 
 console.log("connecting to database"); 
 mongoose.connect('mongodb://localhost/john');
 var TodoModel = mongoose.model('Todo', { title: String, description: String });
 
-http.createServer(function (req, res) {
+var webserver = http.createServer(function (req, res) {
     // Get the URL
     var url = req.url;
     
@@ -159,9 +160,36 @@ http.createServer(function (req, res) {
         res.write('The page you requested could not be found. Status code 404.');
         res.end();
     }
-}).listen(1337, '127.0.0.1');
-console.log('Server running at http://127.0.0.1:1337/');
+});
+
+webserver.listen(8080, '127.0.0.1');
+console.log('Server running at http://127.0.0.1:8080/');
 
 function stringEndsWith(str, ending) {
     return str.indexOf(ending, str.length - ending.length) !== -1;
 }
+
+wsServer = new websocket.server({
+    httpServer: webserver
+});
+
+//var interval;
+
+wsServer.on('request', function(request) {
+    var connection = request.accept(null, request.origin);
+    console.log('websocket client connected...');
+    //interval = setInterval(function() {
+  //      connection.send("boem");}, 1000);
+        
+    connection.on('message', function(message) {
+        if (message.type === 'utf8') {
+          console.log("Storing : " + JSON.stringify(message));
+        }
+    });
+
+    connection.on('close', function(connection) {
+     //   console.log("clearing interval");
+      ///  clearInterval(interval);
+        console.log('websocket client gone..');
+    });
+});

@@ -1,17 +1,52 @@
 var todos = new Array();
+var serverunavailable = true;
 
 $(function () {
 
-    var color = navigator.onLine ? 'green' : 'red';
-    $("body").css('background-color', color);
+    // keep an active connection with server
+    var websocket = new WebSocket("ws://127.0.0.1:8080");
+    websocket.onopen = function(){
+        $("body").css('background-color', 'yellow');
+        serverunavailable = true;
+        
+    };
+    websocket.onmessage = function() {
+        console.log("server is alive...")
+        };
+        
+    websocket.onclose = function() {
+        serverunavailable = true;
+        $("body").css('background-color', 'brown');
+    } 
+    
+    window.setInterval(function() {
+        if (serverunavailable) {
+            websocket = new WebSocket("ws://127.0.0.1:8080");
+            websocket.onopen = function(){
+                $("body").css('background-color', 'yellow');
+                serverunavailable = true;
+            };
+            websocket.onmessage = function() {
+                console.log("server is alive...")
+            };
+        
+            websocket.onclose = function() {
+                serverunavailable = true;
+                $("body").css('background-color', 'brown');
+            } 
+        }
+    }, 1000); 
+    
+   // var color = navigator.onLine ? 'green' : 'red';
+   // $("body").css('background-color', color);
 
-    window.addEventListener('online', function () {
-        console.log("Start syncing data...");
-        $("body").css('background-color', 'green');
-    });
-    window.addEventListener('offline', function () {
-        $("body").css('background-color', 'red');
-    });
+  //  window.addEventListener('online', function () {
+   //     console.log("Start syncing data...");
+    //    $("body").css('background-color', 'green');
+  //  });
+   // window.addEventListener('offline', function () {
+   //     $("body").css('background-color', 'red');
+  ///  });
 
           
     navigator.geolocation.getCurrentPosition(function (e) {
