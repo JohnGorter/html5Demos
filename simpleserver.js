@@ -86,7 +86,18 @@ http.createServer(function (req, res) {
                         res.end();
                     }
                 });
-            } else if (stringEndsWith(url, '.css')) {
+            } else if (url.indexOf("manifest") > -1) {
+                fs.readFile(url, function (err, data) {
+                    if (err) {
+                        console.log('Failure to load: ' + url);
+                        displayInternalError();
+                    } else {
+                        res.writeHead(200, {'Content-Type': 'text/cache-manifest'});
+                        res.write(data);
+                        res.end();
+                    }
+                });
+            }else if (stringEndsWith(url, '.css')) {
                 fs.readFile(url, {encoding: 'utf-8'}, function (err, data) {
                     if (err) {
                         console.log('Failure to load: ' + url);

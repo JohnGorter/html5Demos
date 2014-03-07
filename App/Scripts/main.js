@@ -1,89 +1,108 @@
 var todos = new Array();
 
-$(function(){
-    navigator.geolocation.getCurrentPosition(function(e){
-        $.ajax({url:'http://maps.googleapis.com/maps/api/geocode/json?latlng='
-               + e.coords.latitude + ',' + e.coords.longitude + '&sensor=false',
-               cache:true,
-               success:function(data) {
-                $("#footer").append("<br/>You are located: " + data.results[0].formatted_address);
-               }});
-        }, function(){
-            alert('error');
+$(function () {
+
+    var color = navigator.onLine ? 'green' : 'red';
+    $("body").css('background-color', color);
+
+    window.addEventListener('online', function () {
+        console.log("Start syncing data...");
+        $("body").css('background-color', 'green');
     });
-    
-    $("#todolist").on('dragover', function(e) {
+    window.addEventListener('offline', function () {
+        $("body").css('background-color', 'red');
+    });
+
+          
+    navigator.geolocation.getCurrentPosition(function (e) {
+        $.ajax({ url: 'http://maps.googleapis.com/maps/api/geocode/json?latlng='
+               + e.coords.latitude + ',' + e.coords.longitude + '&sensor=false',
+            cache: true,
+            success: function (data) {
+                $("#footer").append("<br/>You are located nearby '" + data.results[0].formatted_address + "'");
+            }
+        });
+    }, function () {
+        $("#footer").append("<br/>No location information available.");
+    });
+
+    $("#todolist").on('dragover', function (e) {
         $(this).addClass("thickBorder");
         window.event.preventDefault();
         return false;
     });
-    $("#todolist").on('dragleave', function(e) {
+    $("#todolist").on('dragleave', function (e) {
         $(this).removeClass("thickBorder");
         window.event.preventDefault();
         return false;
     });
-    $("#todolist").on('dragend', function(e) {
+    $("#todolist").on('dragend', function (e) {
         $(this).removeClass("thickBorder");
         window.event.preventDefault();
         return false;
     });
-    $("#todolist").on('drop', function(e) {
+    $("#todolist").on('drop', function (e) {
         $(this).removeClass("thickBorder");
         insertTodos(window.event.dataTransfer.files[0]);
         window.event.preventDefault();
         window.event.stopPropagation();
         return false;
     });
-    
-    $("input").change(function(event){
-        validateForm(this);    
+
+    $("input").change(function (event) {
+        validateForm(this);
     });
-   // $.ajax({url:'/Todo/GetTodos', dataType:'JSON', cache:false, success:function(data){
-   //     for(var i = 0; i < data.length; i++)
-   //         addTodo(data[i].title, data[i].description, false);
-   // }});
-   if (window.localStorage["todos"]) {
-        todos = JSON.parse(window.localStorage["todos"]);
-        addTodosFromArray(todos, false);
-   }
-    
-    $("#tul").keyup(function(e){
-                $("#tul").trigger('indexchange', [ "keycode", e.keyCode]);
+
+    if (navigator.onLine) {
+        console.log("Retrieving items from the server...");
+        // $.ajax({url:'/Todo/GetTodos', dataType:'JSON', cache:false, success:function(data){
+        //     for(var i = 0; i < data.length; i++)
+        //         addTodo(data[i].title, data[i].description, false);
+        // }});
+    } else {
+        console.log("Retrieving items from the client...");
+        if (window.localStorage["todos"]) {
+            todos = JSON.parse(window.localStorage["todos"]);
+            addTodosFromArray(todos, false);
+        }
+    }
+
+    $("#tul").keyup(function (e) {
+        $("#tul").trigger('indexchange', ["keycode", e.keyCode]);
     });
-    $("#tul").on("indexchange", function(event, param1, param2){
+    $("#tul").on("indexchange", function (event, param1, param2) {
         var index = $("#tul li.selected").index();
-        var max = $("#tul li").size()-1;
+        var max = $("#tul li").size() - 1;
         param2 == 40 ? index++ : param2 == 38 ? index-- : index;
-        if (index < 0) { index = 0;}
-        if (index > max) { index = max;}
+        if (index < 0) { index = 0; }
+        if (index > max) { index = max; }
         $("#tul li").removeClass("selected");
         $($("#tul li")[index]).addClass("selected").trigger("click");
-        
-        });
-    
-   // set the badge counter to the number of LI items
-   $("#badge").text($("#tul li").size());
-   // set click function of the panel to hide the panel
-   $("#btnAlert").click(function(){ $("#aPanel").hide()});
-   $("#btnDialog").click(function(){
+
+    });
+
+    // set the badge counter to the number of LI items
+    $("#badge").text($("#tul li").size());
+    // set click function of the panel to hide the panel
+    $("#btnAlert").click(function () { $("#aPanel").hide() });
+    $("#btnDialog").click(function () {
         $("#t").val("");
         $("#d").val("");
         resetForm();
-    }); 
-   // add a new todo item to the unordered list
-   $("#bS").click(function() {
-        if (validateForm())
-        {
+    });
+    // add a new todo item to the unordered list
+    $("#bS").click(function () {
+        if (validateForm()) {
             event.preventDefault();
             event.stopPropagation();
             return;
         }
         addTodo($("#t").val(), $("#d").val(), true);
-   });
+    });
 });
 
-function exists(title, arrayofobjects){
-    for(obj in arrayofobjects)
+function exists(title, arrayofobjects) {
+    for (obj in arrayofobjects)
         if (arrayofobjects[obj].title == title) {
             return true;
         }
@@ -92,14 +111,14 @@ function exists(title, arrayofobjects){
 
 function insertTodos(todosfile) {
     var reader = new FileReader();
-    reader.onload = function(data) {
-      var imported = JSON.parse(data.target.result);
-      for (imp in imported){
-        if (!exists(imported[imp].title, todos)) 
-            todos.push(imported[imp]);
-      }
-      window.localStorage["todos"] = JSON.stringify(todos);
-      addTodosFromArray(todos, true);
+    reader.onload = function (data) {
+        var imported = JSON.parse(data.target.result);
+        for (imp in imported) {
+            if (!exists(imported[imp].title, todos))
+                todos.push(imported[imp]);
+        }
+        window.localStorage["todos"] = JSON.stringify(todos);
+        addTodosFromArray(todos, true);
     }
     reader.readAsText(todosfile);
 }
@@ -125,8 +144,7 @@ function deleteTodo(element, title) {
     //    'title': title 
     //}});
     var newtodos = new Array();
-    for (var i = 0; i < todos.length; i++)
-    {
+    for (var i = 0; i < todos.length; i++) {
         if (todos[i].title == title) continue;
         newtodos.push(todos[i]);
     }
@@ -140,21 +158,21 @@ function resetForm() {
 }
 
 function validateForm(element) {
-    
+
     var error = false;
-    
+
     if (element != undefined) {
-      if (!element.checkValidity()) {
+        if (!element.checkValidity()) {
             $(".error", $(element).parent()).fadeIn();
             $(element).addClass("inputerror");
             error = true;
-      } else {
-         $(".error", $(element).parent()).fadeOut();
+        } else {
+            $(".error", $(element).parent()).fadeOut();
             $(element).removeClass("inputerror");
-      }
+        }
     } else {
         resetForm();
-        $("input").each(function(index, element){
+        $("input").each(function (index, element) {
             if (!element.checkValidity()) {
                 $(".error", $(element).parent()).fadeIn();
                 $(element).addClass("inputerror");
@@ -176,8 +194,8 @@ function addTodo(title, description, save) {
        ).append(
     // append a <span> for the done icon and handle the done click 
        $("<span>").addClass("d glyphicon glyphicon-ok").click(function () {
-               deleteTodo(this, title);
-           }
+           deleteTodo(this, title);
+       }
        )).click(function (e) {
            //$("#dt").text($(".t", this).text());
            $("#tul li").removeClass("selected");
@@ -185,22 +203,33 @@ function addTodo(title, description, save) {
            $("#dd").text($(".h", this).text());
        }
        ).appendTo("#tul");
-       // set the information panel text to Item Added and show the panel for 2 seconds
-       $("#aPanel span").text("Item Added!").parent().show().delay(2000).fadeOut();
-       // reset the badge counter to the current LI count
-       $("#badge").text($("#tul li").size());
+    // set the information panel text to Item Added and show the panel for 2 seconds
+    $("#aPanel span").text("Item Added!").parent().show().delay(2000).fadeOut();
+    // reset the badge counter to the current LI count
+    $("#badge").text($("#tul li").size());
 
-       if (save) {
-        todos.push({"title":title, "description":description});
-        window.localStorage["todos"] = JSON.stringify(todos);
-        //   $.ajax({ url: '/todo/AddTodo', cache: false, dataType: 'JSON', data: {
-         //      'title': title, 'description': description
-         //  }, success: function (data) {
-         //      alert(data);
-         //  } 
-         //  });
-       }
-          
-    
+    if (save) {
+        if (navigator.onLine) {
+            console.log("storing item on the server..."); 
+            //   $.ajax({ url: '/todo/AddTodo', cache: false, dataType: 'JSON', data: {
+            //      'title': title, 'description': description
+            //  }, success: function (data) {
+            //      alert(data);
+            //  } 
+            //  });
+        } else {
+            console.log("storing item on the client..."); 
+            todos.push({ "title": title, "description": description });
+            window.localStorage["todos"] = JSON.stringify(todos);
+            //   $.ajax({ url: '/todo/AddTodo', cache: false, dataType: 'JSON', data: {
+            //      'title': title, 'description': description
+            //  }, success: function (data) {
+            //      alert(data);
+            //  } 
+            //  });
+        }
+    }
+
+
 }
    

@@ -1,0 +1,19 @@
+﻿CACHE MANIFEST
+# version:1.3
+
+CACHE:
+todo.html
+Fallback.html
+/Bootstrap/css/bootstrap.css
+/Bootstrap/css/bootstrap-theme.css
+/Styles/default.css
+/Scripts/jquery-1.11.0.js
+/Bootstrap/js/bootstrap.js
+/Scripts/main.js
+/Images/bg.jpg
+
+NETWORK:
+*
+
+FALLBACK:
+/ /Fallback.html
