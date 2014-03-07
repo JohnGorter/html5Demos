@@ -1,12 +1,51 @@
+var todos = new Array();
+
 $(function(){
+    navigator.geolocation.getCurrentPosition(function(e){
+        $.ajax({url:'http://maps.googleapis.com/maps/api/geocode/json?latlng='
+               + e.coords.latitude + ',' + e.coords.longitude + '&sensor=false',
+               cache:true,
+               success:function(data) {
+                $("#footer").append("<br/>You are located: " + data.results[0].formatted_address);
+               }});
+        }, function(){
+            alert('error');
+    });
+    
+    $("#todolist").on('dragover', function(e) {
+        $(this).addClass("thickBorder");
+        window.event.preventDefault();
+        return false;
+    });
+    $("#todolist").on('dragleave', function(e) {
+        $(this).removeClass("thickBorder");
+        window.event.preventDefault();
+        return false;
+    });
+    $("#todolist").on('dragend', function(e) {
+        $(this).removeClass("thickBorder");
+        window.event.preventDefault();
+        return false;
+    });
+    $("#todolist").on('drop', function(e) {
+        $(this).removeClass("thickBorder");
+        insertTodos(window.event.dataTransfer.files[0]);
+        window.event.preventDefault();
+        window.event.stopPropagation();
+        return false;
+    });
+    
     $("input").change(function(event){
         validateForm(this);    
     });
-    
-    $.ajax({url:'/Todo/GetTodos', dataType:'JSON', cache:false, success:function(data){
-        for(var i = 0; i < data.length; i++)
-            addTodo(data[i].title, data[i].description, false);
-    }});
+   // $.ajax({url:'/Todo/GetTodos', dataType:'JSON', cache:false, success:function(data){
+   //     for(var i = 0; i < data.length; i++)
+   //         addTodo(data[i].title, data[i].description, false);
+   // }});
+   if (window.localStorage["todos"]) {
+        todos = JSON.parse(window.localStorage["todos"]);
+        addTodosFromArray(todos, false);
+   }
     
     $("#tul").keyup(function(e){
                 $("#tul").trigger('indexchange', [ "keycode", e.keyCode]);
@@ -33,9 +72,42 @@ $(function(){
     }); 
    // add a new todo item to the unordered list
    $("#bS").click(function() {
+        if (validateForm())
+        {
+            event.preventDefault();
+            event.stopPropagation();
+            return;
+        }
         addTodo($("#t").val(), $("#d").val(), true);
    });
 });
+
+function exists(title, arrayofobjects){
+    for(obj in arrayofobjects)
+        if (arrayofobjects[obj].title == title) {
+            return true;
+        }
+    return false;
+}
+
+function insertTodos(todosfile) {
+    var reader = new FileReader();
+    reader.onload = function(data) {
+      var imported = JSON.parse(data.target.result);
+      for (imp in imported){
+        if (!exists(imported[imp].title, todos)) 
+            todos.push(imported[imp]);
+      }
+      window.localStorage["todos"] = JSON.stringify(todos);
+      addTodosFromArray(todos, true);
+    }
+    reader.readAsText(todosfile);
+}
+function addTodosFromArray(todoarray, save) {
+    $("#tul").html("");
+    for (var i = 0; i < todoarray.length; i++)
+        addTodo(todoarray[i].title, todoarray[i].description, false);
+}
 
 function deleteTodo(element, title) {
     $(element).parent().fadeOut("slow", function () {
@@ -49,9 +121,17 @@ function deleteTodo(element, title) {
     // set the information panel text to Item Deleted and show the panel for 2 seconds
     $("#aPanel span").text("Item Deleted!").parent().show().delay(2000).fadeOut();
 
-    $.ajax({ url: '/todo/deleteTodo', cache: false, dataType: 'JSON', data: {
-        'title': title 
-    }});
+    //$.ajax({ url: '/todo/deleteTodo', cache: false, dataType: 'JSON', data: {
+    //    'title': title 
+    //}});
+    var newtodos = new Array();
+    for (var i = 0; i < todos.length; i++)
+    {
+        if (todos[i].title == title) continue;
+        newtodos.push(todos[i]);
+    }
+    todos = newtodos;
+    window.localStorage["todos"] = JSON.stringify(todos);
 }
 
 function resetForm() {
@@ -87,13 +167,6 @@ function validateForm(element) {
 
 
 function addTodo(title, description, save) {
-    if (validateForm())
-    {
-        event.preventDefault();
-        event.stopPropagation();
-        return;
-    }
-    
     $("<li>").append(
     // append a <span> to the LI containing the title of the title input
            $("<span>").addClass("t").text(title)
@@ -118,12 +191,14 @@ function addTodo(title, description, save) {
        $("#badge").text($("#tul li").size());
 
        if (save) {
-           $.ajax({ url: '/todo/AddTodo', cache: false, dataType: 'JSON', data: {
-               'title': title, 'description': description
-           }, success: function (data) {
-               alert(data);
-           } 
-           });
+        todos.push({"title":title, "description":description});
+        window.localStorage["todos"] = JSON.stringify(todos);
+        //   $.ajax({ url: '/todo/AddTodo', cache: false, dataType: 'JSON', data: {
+         //      'title': title, 'description': description
+         //  }, success: function (data) {
+         //      alert(data);
+         //  } 
+         //  });
        }
           
     

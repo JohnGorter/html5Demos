@@ -41,7 +41,13 @@ ul   { margin-left:-20px; list-style-type: none;outline:none;}
 .selected {
    background-color:#aa9988
 }
+.thickBorder {
+    border:2px solid black;
+}
+
 #aPanel { display:none;position:absolute;z-index: 999;bottom:10px;right:10px;width:500px;}
+
+#tul {border:0px solid black;}
 
 @media screen and (orientation:portrait)
 {
