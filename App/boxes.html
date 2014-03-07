@@ -20,10 +20,15 @@
         margin:5px;
     }
     .green {
+        position:relative;
         background-color:green;
         flex:3;
     }
-    
+    .menu {
+        position:absolute;
+        left:10px;
+        top:10px;
+    }
     @media screen and (max-width:400px) {
         #container {
             flex-direction:column;
@@ -39,7 +44,9 @@
 <div class="block header">header</div>
 <div id="container">
     <div class="block">navigation</div>
-    <div class="block green">content</div>
+    <div class="block green">content
+      <div class="menu">menu</div>
+    </div>
     <div class="block">footer</div>
     
 </div>
